@@ -28,6 +28,24 @@ async function query(text, params) {
   return res;
 }
 
+// Runs `callback` inside a single client transaction. `callback` receives a
+// client whose .query() participates in the same transaction — commits on
+// success, rolls back on any thrown error.
+async function withTransaction(callback) {
+  const client = await pool.connect();
+  try {
+    await client.query('BEGIN');
+    const result = await callback(client);
+    await client.query('COMMIT');
+    return result;
+  } catch (err) {
+    await client.query('ROLLBACK');
+    throw err;
+  } finally {
+    client.release();
+  }
+}
+
 async function testConnection() {
   try {
     await pool.query('SELECT NOW()');
@@ -38,4 +56,4 @@ async function testConnection() {
   }
 }
 
-module.exports = { pool, query, testConnection };
+module.exports = { pool, query, withTransaction, testConnection };
