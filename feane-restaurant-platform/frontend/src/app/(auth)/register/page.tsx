@@ -22,7 +22,15 @@ export default function RegisterPage() {
     setError(null);
     setSubmitting(true);
     try {
-      await register(form);
+      // Only include phone if the user actually typed one — an empty
+      // string would otherwise get stored instead of NULL.
+      const payload = {
+        name: form.name,
+        email: form.email,
+        password: form.password,
+        ...(form.phone.trim() ? { phone: form.phone.trim() } : {}),
+      };
+      await register(payload);
       router.push('/');
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Registration failed');
