@@ -3,13 +3,14 @@
 
 import { useState, type FormEvent } from 'react';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { AuthCard } from '../../../components/auth/AuthCard';
 import { useAuth } from '../../../context/AuthContext';
 
 export default function LoginPage() {
   const { login } = useAuth();
   const router = useRouter();
+  const searchParams = useSearchParams();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState<string | null>(null);
@@ -21,7 +22,8 @@ export default function LoginPage() {
     setSubmitting(true);
     try {
       await login(email, password);
-      router.push('/');
+      const redirect = searchParams.get('redirect');
+      router.push(redirect || '/');
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Login failed');
     } finally {
