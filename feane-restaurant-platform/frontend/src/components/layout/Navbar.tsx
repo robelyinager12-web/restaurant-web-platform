@@ -2,8 +2,9 @@
 'use client';
 
 import Link from 'next/link';
-import { User, ShoppingCart, Search } from 'lucide-react';
+import { User as UserIcon, ShoppingCart, Search } from 'lucide-react';
 import { useCart } from '../../context/CartContext';
+import { useAuth } from '../../context/AuthContext';
 
 const NAV_LINKS = [
   { label: 'HOME', href: '/' },
@@ -14,6 +15,7 @@ const NAV_LINKS = [
 
 export function Navbar() {
   const { itemCount } = useCart();
+  const { user, logout } = useAuth();
 
   return (
     <header className="absolute top-0 left-0 right-0 z-20">
@@ -35,9 +37,19 @@ export function Navbar() {
         </nav>
 
         <div className="flex items-center gap-5">
-          <button aria-label="Account" className="hidden text-white/90 hover:text-brand-gold sm:block">
-            <User size={20} />
-          </button>
+          {user ? (
+            <button
+              onClick={logout}
+              className="hidden text-sm text-white/90 hover:text-brand-gold sm:block"
+            >
+              Sign out ({user.name.split(' ')[0]})
+            </button>
+          ) : (
+            <Link href="/login" aria-label="Account" className="hidden text-white/90 hover:text-brand-gold sm:block">
+              <UserIcon size={20} />
+            </Link>
+          )}
+
           <Link href="/cart" aria-label="Cart" className="relative hidden text-white/90 hover:text-brand-gold sm:block">
             <ShoppingCart size={20} />
             {itemCount > 0 && (
