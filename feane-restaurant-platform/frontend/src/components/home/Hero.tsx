@@ -25,13 +25,20 @@ const SLIDES = [
   },
 ];
 
+// Fades the image's left, top, and bottom edges into transparency so the
+// dark page background shows through instead of a hard rectangular edge —
+// matches the reference design where the photo blends into the page rather
+// than sitting in a bounded card.
+const EDGE_FADE_MASK =
+  'linear-gradient(to right, transparent 0%, black 18%), linear-gradient(to bottom, transparent 0%, black 10%, black 85%, transparent 100%)';
+
 export function Hero() {
   const [active, setActive] = useState(0);
   const slide = SLIDES[active];
 
   return (
-    <section className="relative min-h-[640px] w-full overflow-hidden pt-32 pb-20 md:min-h-[720px]">
-      <div className="mx-auto grid max-w-7xl grid-cols-1 items-center gap-8 px-6 md:grid-cols-2 md:px-10">
+    <section className="relative min-h-[640px] w-full overflow-hidden pb-0 pt-32 md:min-h-[760px]">
+      <div className="relative mx-auto grid h-full max-w-7xl grid-cols-1 items-center gap-8 px-6 md:grid-cols-2 md:px-10">
         <div className="relative z-10">
           <h1 className="font-display text-5xl italic leading-tight text-white md:text-6xl">
             {slide.title}
@@ -59,17 +66,42 @@ export function Hero() {
             ))}
           </div>
         </div>
+      </div>
 
-        <div className="relative h-[320px] md:h-[440px]">
-          <Image
-            src={slide.image}
-            alt="Burger and fries on a wooden board"
-            fill
-            priority
-            className="object-contain object-center md:object-right"
-            sizes="(max-width: 768px) 100vw, 50vw"
-          />
-        </div>
+      {/* Full-bleed image, positioned absolutely over the right half of the
+          section and allowed to overflow past the section's own bottom edge —
+          this, combined with the mask below, is what makes it read as "part
+          of the page" instead of a photo dropped in a box. */}
+      <div
+        className="pointer-events-none absolute inset-y-0 right-0 hidden w-[55%] md:block"
+        style={{
+          maskImage: EDGE_FADE_MASK,
+          WebkitMaskImage: EDGE_FADE_MASK,
+          maskComposite: 'intersect',
+          WebkitMaskComposite: 'source-in',
+        }}
+      >
+        <Image
+          src={slide.image}
+          alt="Burgers on a wooden board"
+          fill
+          priority
+          className="object-cover object-center"
+          sizes="55vw"
+        />
+      </div>
+
+      {/* Mobile fallback: same image, simple contained box, no fade mask —
+          the edge-blend effect depends on horizontal space this layout
+          doesn't have below the md breakpoint. */}
+      <div className="relative mt-8 h-[280px] w-full px-6 md:hidden">
+        <Image
+          src={slide.image}
+          alt="Burgers on a wooden board"
+          fill
+          className="rounded-2xl object-cover"
+          sizes="100vw"
+        />
       </div>
 
       <div
