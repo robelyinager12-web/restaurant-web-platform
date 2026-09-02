@@ -10,18 +10,18 @@ const SLIDES = [
     title: 'Fast Food Restaurant',
     description:
       'Fresh, hand-pressed burgers and crispy fries made to order. Taste the difference real ingredients make.',
-    image: '/images/hero-burger-fries.jpg',
+    image: '/images/hero-burger-fries.png',
   },
   {
     title: 'Bold Flavors, Fast',
     description:
       'From our grill to your table in minutes — without cutting a single corner on flavor.',
-    image: '/images/hero-burger-fries.jpg',
+    image: '/images/hero-burger-fries.png',
   },
   {
     title: 'Order. Relax. Enjoy.',
     description: 'Order online for pickup or delivery, or book a table and let us do the rest.',
-    image: '/images/hero-burger-fries.jpg',
+    image: '/images/hero-burger-fries.png',
   },
 ];
 
