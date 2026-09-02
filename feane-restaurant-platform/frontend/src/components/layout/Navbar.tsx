@@ -3,6 +3,7 @@
 
 import Link from 'next/link';
 import { User, ShoppingCart, Search } from 'lucide-react';
+import { useCart } from '../../context/CartContext';
 
 const NAV_LINKS = [
   { label: 'HOME', href: '/' },
@@ -12,6 +13,8 @@ const NAV_LINKS = [
 ];
 
 export function Navbar() {
+  const { itemCount } = useCart();
+
   return (
     <header className="absolute top-0 left-0 right-0 z-20">
       <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-6 md:px-10">
@@ -35,8 +38,13 @@ export function Navbar() {
           <button aria-label="Account" className="hidden text-white/90 hover:text-brand-gold sm:block">
             <User size={20} />
           </button>
-          <Link href="/cart" aria-label="Cart" className="hidden text-white/90 hover:text-brand-gold sm:block">
+          <Link href="/cart" aria-label="Cart" className="relative hidden text-white/90 hover:text-brand-gold sm:block">
             <ShoppingCart size={20} />
+            {itemCount > 0 && (
+              <span className="absolute -right-2 -top-2 flex h-4 w-4 items-center justify-center rounded-full bg-brand-gold text-[10px] font-bold text-brand-dark">
+                {itemCount}
+              </span>
+            )}
           </Link>
           <button aria-label="Search" className="hidden text-white/90 hover:text-brand-gold sm:block">
             <Search size={20} />
