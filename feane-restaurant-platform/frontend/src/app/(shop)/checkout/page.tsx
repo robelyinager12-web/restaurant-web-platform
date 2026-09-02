@@ -21,6 +21,15 @@ function CheckoutForm() {
   const [error, setError] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
 
+  // Switching order type clears a stale address rather than letting it
+  // linger in state and potentially get sent along with a pickup order.
+  const handleOrderTypeChange = (type: 'pickup' | 'delivery') => {
+    setOrderType(type);
+    if (type === 'pickup') {
+      setDeliveryAddress('');
+    }
+  };
+
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
     setError(null);
@@ -87,7 +96,7 @@ function CheckoutForm() {
             <button
               key={type}
               type="button"
-              onClick={() => setOrderType(type)}
+              onClick={() => handleOrderTypeChange(type)}
               className={`flex-1 rounded-full py-3 text-sm font-medium capitalize transition-colors ${
                 orderType === type
                   ? 'bg-brand-gold text-brand-dark'
