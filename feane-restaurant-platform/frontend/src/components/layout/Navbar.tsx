@@ -1,8 +1,9 @@
 // File: frontend/src/components/layout/Navbar.tsx
 'use client';
 
+import { useState } from 'react';
 import Link from 'next/link';
-import { User as UserIcon, ShoppingCart, Search } from 'lucide-react';
+import { User as UserIcon, ShoppingCart, Search, Menu, X } from 'lucide-react';
 import { useCart } from '../../context/CartContext';
 import { useAuth } from '../../context/AuthContext';
 
@@ -16,14 +17,18 @@ const NAV_LINKS = [
 export function Navbar() {
   const { itemCount } = useCart();
   const { user, logout } = useAuth();
+  const [mobileOpen, setMobileOpen] = useState(false);
+
+  const closeMobile = () => setMobileOpen(false);
 
   return (
-    <header className="absolute top-0 left-0 right-0 z-20">
+    <header className="absolute top-0 left-0 right-0 z-30">
       <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-6 md:px-10">
-        <Link href="/" className="font-display text-2xl italic text-white">
+        <Link href="/" className="font-display text-2xl italic text-white" onClick={closeMobile}>
           Feane
         </Link>
 
+        {/* Desktop nav — hidden below md, same as before */}
         <nav className="hidden items-center gap-8 text-sm font-medium tracking-wide md:flex">
           {NAV_LINKS.map((link, idx) => (
             <Link
@@ -36,21 +41,19 @@ export function Navbar() {
           ))}
         </nav>
 
-        <div className="flex items-center gap-5">
+        {/* Desktop icon cluster — hidden below sm, same as before */}
+        <div className="hidden items-center gap-5 sm:flex">
           {user ? (
-            <button
-              onClick={logout}
-              className="hidden text-sm text-white/90 hover:text-brand-gold sm:block"
-            >
+            <button onClick={logout} className="text-sm text-white/90 hover:text-brand-gold">
               Sign out ({user.name.split(' ')[0]})
             </button>
           ) : (
-            <Link href="/login" aria-label="Account" className="hidden text-white/90 hover:text-brand-gold sm:block">
+            <Link href="/login" aria-label="Account" className="text-white/90 hover:text-brand-gold">
               <UserIcon size={20} />
             </Link>
           )}
 
-          <Link href="/cart" aria-label="Cart" className="relative hidden text-white/90 hover:text-brand-gold sm:block">
+          <Link href="/cart" aria-label="Cart" className="relative text-white/90 hover:text-brand-gold">
             <ShoppingCart size={20} />
             {itemCount > 0 && (
               <span className="absolute -right-2 -top-2 flex h-4 w-4 items-center justify-center rounded-full bg-brand-gold text-[10px] font-bold text-brand-dark">
@@ -58,7 +61,7 @@ export function Navbar() {
               </span>
             )}
           </Link>
-          <button aria-label="Search" className="hidden text-white/90 hover:text-brand-gold sm:block">
+          <button aria-label="Search" className="text-white/90 hover:text-brand-gold">
             <Search size={20} />
           </button>
           <Link
@@ -68,7 +71,76 @@ export function Navbar() {
             Order Online
           </Link>
         </div>
+
+        {/* Mobile: cart badge + hamburger toggle, visible only below md */}
+        <div className="flex items-center gap-4 md:hidden">
+          <Link href="/cart" aria-label="Cart" className="relative text-white/90">
+            <ShoppingCart size={20} />
+            {itemCount > 0 && (
+              <span className="absolute -right-2 -top-2 flex h-4 w-4 items-center justify-center rounded-full bg-brand-gold text-[10px] font-bold text-brand-dark">
+                {itemCount}
+              </span>
+            )}
+          </Link>
+          <button
+            onClick={() => setMobileOpen((prev) => !prev)}
+            aria-label={mobileOpen ? 'Close menu' : 'Open menu'}
+            aria-expanded={mobileOpen}
+            className="text-white"
+          >
+            {mobileOpen ? <X size={26} /> : <Menu size={26} />}
+          </button>
+        </div>
       </div>
+
+      {/* Mobile menu panel — only rendered below md, toggled by hamburger */}
+      {mobileOpen && (
+        <div className="border-t border-white/10 bg-brand-dark md:hidden">
+          <nav className="flex flex-col gap-1 px-6 py-6">
+            {NAV_LINKS.map((link, idx) => (
+              <Link
+                key={link.href}
+                href={link.href}
+                onClick={closeMobile}
+                className={`rounded-lg px-3 py-3 text-sm font-medium ${
+                  idx === 0 ? 'text-brand-gold' : 'text-white/90 hover:bg-white/5'
+                }`}
+              >
+                {link.label}
+              </Link>
+            ))}
+
+            <div className="mt-4 flex items-center gap-6 border-t border-white/10 px-3 pt-4">
+              {user ? (
+                <button
+                  onClick={() => {
+                    logout();
+                    closeMobile();
+                  }}
+                  className="text-sm text-white/70"
+                >
+                  Sign out ({user.name.split(' ')[0]})
+                </button>
+              ) : (
+                <Link href="/login" onClick={closeMobile} className="flex items-center gap-2 text-sm text-white/70">
+                  <UserIcon size={18} /> Sign In
+                </Link>
+              )}
+              <button className="flex items-center gap-2 text-sm text-white/70">
+                <Search size={18} /> Search
+              </button>
+            </div>
+
+            <Link
+              href="/menu"
+              onClick={closeMobile}
+              className="mt-4 rounded-full bg-brand-gold px-6 py-3 text-center text-sm font-semibold text-brand-dark"
+            >
+              Order Online
+            </Link>
+          </nav>
+        </div>
+      )}
     </header>
   );
 }
