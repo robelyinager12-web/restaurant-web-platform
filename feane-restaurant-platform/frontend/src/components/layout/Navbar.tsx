@@ -7,6 +7,7 @@ import { User as UserIcon, ShoppingCart, Search, Menu, X } from 'lucide-react';
 import { useCart } from '../../context/CartContext';
 import { useAuth } from '../../context/AuthContext';
 import { SearchOverlay } from './SearchOverlay';
+import { Logo } from './Logo';
 
 const NAV_LINKS = [
   { label: 'HOME', href: '/' },
@@ -33,9 +34,7 @@ export function Navbar() {
     <>
       <header className="absolute top-0 left-0 right-0 z-30">
         <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-6 md:px-10">
-          <Link href="/" className="font-display text-2xl italic text-white" onClick={closeMobile}>
-            Feane
-          </Link>
+          <Logo onClick={closeMobile} />
 
           <nav className="hidden items-center gap-6 text-sm font-medium tracking-wide lg:flex">
             {NAV_LINKS.map((link, idx) => (
