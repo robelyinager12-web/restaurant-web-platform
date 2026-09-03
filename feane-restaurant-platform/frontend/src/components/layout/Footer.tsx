@@ -1,13 +1,14 @@
 // File: frontend/src/components/layout/Footer.tsx
 import Link from 'next/link';
 import { Instagram, Facebook, Twitter } from 'lucide-react';
+import { Logo } from './Logo';
 
 export function Footer() {
   return (
     <footer className="border-t border-white/10 bg-brand-dark pt-16">
       <div className="mx-auto grid max-w-7xl grid-cols-1 gap-10 px-6 pb-10 sm:grid-cols-2 md:grid-cols-4 md:px-10">
         <div>
-          <p className="font-display text-2xl italic text-white">Feane</p>
+          <Logo />
           <p className="mt-3 text-sm text-white/50">
             Fresh, hand-pressed fast food made to order — every single time.
           </p>
