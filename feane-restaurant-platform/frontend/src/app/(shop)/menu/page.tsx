@@ -3,12 +3,18 @@
 
 import { useEffect, useMemo, useState } from 'react';
 import { Navbar } from '../../../components/layout/Navbar';
+import { Footer } from '../../../components/layout/Footer';
+import { MenuHero } from '../../../components/menu/MenuHero';
 import { CategoryTabs } from '../../../components/menu/CategoryTabs';
 import { MenuItemCard } from '../../../components/menu/MenuItemCard';
 import { MenuItemSkeleton } from '../../../components/menu/MenuItemSkeleton';
 import { MenuToolbar, type SortOption } from '../../../components/menu/MenuToolbar';
+import { DietaryFilters, type DietaryFilterState } from '../../../components/menu/DietaryFilters';
+import { MenuFinalCTA } from '../../../components/menu/MenuFinalCTA';
 import { getCategories, getItems } from '../../../lib/menu';
 import type { MenuCategory, MenuItem } from '../../../types/menu';
+
+const PRICE_CEILING = 50;
 
 export default function MenuPage() {
   const [categories, setCategories] = useState<MenuCategory[]>([]);
@@ -16,15 +22,19 @@ export default function MenuPage() {
   const [activeCategory, setActiveCategory] = useState<string | null>(null);
   const [search, setSearch] = useState('');
   const [sort, setSort] = useState<SortOption>('default');
+  const [dietary, setDietary] = useState<DietaryFilterState>({
+    vegetarian: false,
+    vegan: false,
+    glutenFree: false,
+  });
+  const [priceMax, setPriceMax] = useState(PRICE_CEILING);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     getCategories()
       .then((data) => setCategories(data.categories))
-      .catch(() => {
-        // Non-fatal: "All" tab still works without category tabs loading.
-      });
+      .catch(() => {});
   }, []);
 
   useEffect(() => {
@@ -48,39 +58,47 @@ export default function MenuPage() {
       );
     }
 
+    result = result.filter((item) => Number(item.price) <= priceMax);
+
+    if (dietary.vegetarian) result = result.filter((item) => item.is_vegetarian || item.is_vegan);
+    if (dietary.vegan) result = result.filter((item) => item.is_vegan);
+    if (dietary.glutenFree) result = result.filter((item) => item.is_gluten_free);
+
     const sorted = [...result];
     if (sort === 'name') sorted.sort((a, b) => a.name.localeCompare(b.name));
     if (sort === 'price-asc') sorted.sort((a, b) => Number(a.price) - Number(b.price));
     if (sort === 'price-desc') sorted.sort((a, b) => Number(b.price) - Number(a.price));
 
     return sorted;
-  }, [items, search, sort]);
+  }, [items, search, sort, dietary, priceMax]);
 
   return (
-    <main className="min-h-screen bg-brand-dark pb-24">
+    <main className="min-h-screen bg-brand-dark">
       <Navbar />
+      <MenuHero />
 
-      <div className="pt-32 text-center">
-        <p className="text-sm font-semibold uppercase tracking-widest text-brand-gold">
-          Fresh Daily
-        </p>
-        <h1 className="mt-3 font-display text-4xl italic text-white md:text-5xl">Our Menu</h1>
-        <p className="mt-3 text-white/60">Fresh ingredients, made to order.</p>
+      <div className="mt-2">
+        <MenuToolbar search={search} onSearchChange={setSearch} sort={sort} onSortChange={setSort} />
       </div>
 
-      <div className="mt-10">
-        <MenuToolbar search={search} onSearchChange={setSearch} sort={sort} onSortChange={setSort} />
+      <div className="mt-6">
+        <DietaryFilters
+          filters={dietary}
+          onChange={setDietary}
+          priceMax={priceMax}
+          onPriceMaxChange={setPriceMax}
+          priceCeiling={PRICE_CEILING}
+        />
       </div>
 
       <CategoryTabs categories={categories} active={activeCategory} onSelect={setActiveCategory} />
 
-      <div className="mx-auto max-w-7xl px-6 md:px-10">
+      <div className="mx-auto max-w-7xl px-6 pb-24 md:px-10">
         {error && (
           <div className="mx-auto max-w-md rounded-xl bg-red-500/10 p-6 text-center">
             <p className="text-red-400">{error}</p>
             <p className="mt-2 text-xs text-white/40">
-              If this persists, check your backend terminal for the actual error — this message is
-              a generic fallback.
+              If this persists, check your backend terminal for the actual error.
             </p>
           </div>
         )}
@@ -95,7 +113,7 @@ export default function MenuPage() {
 
         {!loading && !error && visibleItems.length === 0 && (
           <p className="text-center text-white/50">
-            {search ? `No items match "${search}".` : 'No items in this category yet.'}
+            No items match your current filters. Try widening the price range or clearing dietary filters.
           </p>
         )}
 
@@ -107,6 +125,9 @@ export default function MenuPage() {
           </div>
         )}
       </div>
+
+      <MenuFinalCTA />
+      <Footer />
     </main>
   );
 }
