@@ -11,7 +11,7 @@ const NAV_LINKS = [
   { label: 'HOME', href: '/' },
   { label: 'MENU', href: '/menu' },
   { label: 'ABOUT', href: '/about' },
-  { label: 'RESERVATIONS', href: '/book-table' },
+  { label: 'BOOK TABLE', href: '/book-table' },
   { label: 'CONTACT', href: '/contact' },
 ];
 
@@ -29,7 +29,6 @@ export function Navbar() {
           Feane
         </Link>
 
-        {/* Desktop nav — hidden below lg now, since 5 items need more room than 4 did */}
         <nav className="hidden items-center gap-6 text-sm font-medium tracking-wide lg:flex">
           {NAV_LINKS.map((link, idx) => (
             <Link
@@ -42,7 +41,6 @@ export function Navbar() {
           ))}
         </nav>
 
-        {/* Desktop icon cluster — hidden below sm, same as before */}
         <div className="hidden items-center gap-5 sm:flex">
           {user ? (
             <button onClick={logout} className="text-sm text-white/90 hover:text-brand-gold">
@@ -73,7 +71,6 @@ export function Navbar() {
           </Link>
         </div>
 
-        {/* Mobile: cart badge + hamburger toggle, visible below lg now */}
         <div className="flex items-center gap-4 lg:hidden">
           <Link href="/cart" aria-label="Cart" className="relative text-white/90">
             <ShoppingCart size={20} />
@@ -94,7 +91,6 @@ export function Navbar() {
         </div>
       </div>
 
-      {/* Mobile menu panel — visible below lg now, toggled by hamburger */}
       {mobileOpen && (
         <div className="border-t border-white/10 bg-brand-dark lg:hidden">
           <nav className="flex flex-col gap-1 px-6 py-6">
