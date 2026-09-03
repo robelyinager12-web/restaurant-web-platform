@@ -11,7 +11,8 @@ const NAV_LINKS = [
   { label: 'HOME', href: '/' },
   { label: 'MENU', href: '/menu' },
   { label: 'ABOUT', href: '/about' },
-  { label: 'BOOK TABLE', href: '/book-table' },
+  { label: 'RESERVATIONS', href: '/book-table' },
+  { label: 'CONTACT', href: '/contact' },
 ];
 
 export function Navbar() {
@@ -28,8 +29,8 @@ export function Navbar() {
           Feane
         </Link>
 
-        {/* Desktop nav — hidden below md, same as before */}
-        <nav className="hidden items-center gap-8 text-sm font-medium tracking-wide md:flex">
+        {/* Desktop nav — hidden below lg now, since 5 items need more room than 4 did */}
+        <nav className="hidden items-center gap-6 text-sm font-medium tracking-wide lg:flex">
           {NAV_LINKS.map((link, idx) => (
             <Link
               key={link.href}
@@ -72,8 +73,8 @@ export function Navbar() {
           </Link>
         </div>
 
-        {/* Mobile: cart badge + hamburger toggle, visible only below md */}
-        <div className="flex items-center gap-4 md:hidden">
+        {/* Mobile: cart badge + hamburger toggle, visible below lg now */}
+        <div className="flex items-center gap-4 lg:hidden">
           <Link href="/cart" aria-label="Cart" className="relative text-white/90">
             <ShoppingCart size={20} />
             {itemCount > 0 && (
@@ -93,9 +94,9 @@ export function Navbar() {
         </div>
       </div>
 
-      {/* Mobile menu panel — only rendered below md, toggled by hamburger */}
+      {/* Mobile menu panel — visible below lg now, toggled by hamburger */}
       {mobileOpen && (
-        <div className="border-t border-white/10 bg-brand-dark md:hidden">
+        <div className="border-t border-white/10 bg-brand-dark lg:hidden">
           <nav className="flex flex-col gap-1 px-6 py-6">
             {NAV_LINKS.map((link, idx) => (
               <Link
