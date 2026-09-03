@@ -13,7 +13,6 @@ export function ReservationsCTA() {
         <p className="mt-4 text-white/60">
           Book online in under a minute, or call us directly for same-day reservations.
         </p>
-
         <div className="mt-8 flex flex-col justify-center gap-4 sm:flex-row">
           <Link
             href="/book-table"

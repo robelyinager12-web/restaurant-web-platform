@@ -15,7 +15,6 @@ export function SocialMedia() {
           Follow Along
         </p>
         <h2 className="mt-3 font-display text-3xl italic text-white">Social Media</h2>
-
         <div className="mt-8 flex justify-center gap-6">
           {SOCIALS.map(({ icon: Icon, label, href }) => (
             
@@ -29,7 +28,7 @@ export function SocialMedia() {
           ))}
         </div>
         <p className="mt-6 text-xs text-white/30">
-          Links are placeholders — update with your real social profile URLs.
+          Links are placeholders, update with your real social profile URLs.
         </p>
       </div>
     </section>

@@ -12,7 +12,6 @@ const NAV_LINKS = [
   { label: 'MENU', href: '/menu' },
   { label: 'ABOUT', href: '/about' },
   { label: 'BOOK TABLE', href: '/book-table' },
-  { label: 'CONTACT', href: '/contact' },
 ];
 
 export function Navbar() {
@@ -29,7 +28,7 @@ export function Navbar() {
           Feane
         </Link>
 
-        <nav className="hidden items-center gap-6 text-sm font-medium tracking-wide lg:flex">
+        <nav className="hidden items-center gap-8 text-sm font-medium tracking-wide md:flex">
           {NAV_LINKS.map((link, idx) => (
             <Link
               key={link.href}
@@ -71,7 +70,7 @@ export function Navbar() {
           </Link>
         </div>
 
-        <div className="flex items-center gap-4 lg:hidden">
+        <div className="flex items-center gap-4 md:hidden">
           <Link href="/cart" aria-label="Cart" className="relative text-white/90">
             <ShoppingCart size={20} />
             {itemCount > 0 && (
@@ -92,7 +91,7 @@ export function Navbar() {
       </div>
 
       {mobileOpen && (
-        <div className="border-t border-white/10 bg-brand-dark lg:hidden">
+        <div className="border-t border-white/10 bg-brand-dark md:hidden">
           <nav className="flex flex-col gap-1 px-6 py-6">
             {NAV_LINKS.map((link, idx) => (
               <Link
