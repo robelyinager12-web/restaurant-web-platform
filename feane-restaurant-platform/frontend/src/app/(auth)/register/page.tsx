@@ -6,9 +6,11 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { AuthCard } from '../../../components/auth/AuthCard';
 import { useAuth } from '../../../context/AuthContext';
+import { useLanguage } from '../../../context/LanguageContext';
 
 export default function RegisterPage() {
   const { register } = useAuth();
+  const { t } = useLanguage();
   const router = useRouter();
   const [form, setForm] = useState({ name: '', email: '', phone: '', password: '' });
   const [error, setError] = useState<string | null>(null);
@@ -22,8 +24,6 @@ export default function RegisterPage() {
     setError(null);
     setSubmitting(true);
     try {
-      // Only include phone if the user actually typed one — an empty
-      // string would otherwise get stored instead of NULL.
       const payload = {
         name: form.name,
         email: form.email,
@@ -40,10 +40,10 @@ export default function RegisterPage() {
   };
 
   return (
-    <AuthCard title="Create Account">
+    <AuthCard title={t.register.title}>
       <form onSubmit={handleSubmit} className="mt-8 space-y-4">
         <div>
-          <label className="mb-1.5 block text-sm text-white/60">Full name</label>
+          <label className="mb-1.5 block text-sm text-white/60">{t.register.fullName}</label>
           <input
             required
             value={form.name}
@@ -52,7 +52,7 @@ export default function RegisterPage() {
           />
         </div>
         <div>
-          <label className="mb-1.5 block text-sm text-white/60">Email</label>
+          <label className="mb-1.5 block text-sm text-white/60">{t.register.email}</label>
           <input
             type="email"
             required
@@ -62,7 +62,7 @@ export default function RegisterPage() {
           />
         </div>
         <div>
-          <label className="mb-1.5 block text-sm text-white/60">Phone (optional)</label>
+          <label className="mb-1.5 block text-sm text-white/60">{t.register.phone}</label>
           <input
             value={form.phone}
             onChange={handleChange('phone')}
@@ -70,7 +70,7 @@ export default function RegisterPage() {
           />
         </div>
         <div>
-          <label className="mb-1.5 block text-sm text-white/60">Password</label>
+          <label className="mb-1.5 block text-sm text-white/60">{t.register.password}</label>
           <input
             type="password"
             required
@@ -79,7 +79,7 @@ export default function RegisterPage() {
             onChange={handleChange('password')}
             className="w-full rounded-lg bg-white/5 px-4 py-3 text-white outline-none ring-1 ring-white/10 focus:ring-brand-gold"
           />
-          <p className="mt-1 text-xs text-white/40">At least 8 characters.</p>
+          <p className="mt-1 text-xs text-white/40">{t.register.passwordHint}</p>
         </div>
 
         {error && <p className="text-sm text-red-400">{error}</p>}
@@ -89,14 +89,14 @@ export default function RegisterPage() {
           disabled={submitting}
           className="w-full rounded-full bg-brand-gold py-3.5 text-sm font-semibold text-brand-dark hover:brightness-110 transition disabled:opacity-60"
         >
-          {submitting ? 'Creating account…' : 'Register'}
+          {submitting ? t.register.submitting : t.register.submit}
         </button>
       </form>
 
       <p className="mt-6 text-center text-sm text-white/50">
-        Already have an account?{' '}
+        {t.register.haveAccount}{' '}
         <Link href="/login" className="text-brand-gold hover:underline">
-          Sign in
+          {t.register.signIn}
         </Link>
       </p>
     </AuthCard>

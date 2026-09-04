@@ -6,9 +6,11 @@ import Link from 'next/link';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { AuthCard } from '../../../components/auth/AuthCard';
 import { useAuth } from '../../../context/AuthContext';
+import { useLanguage } from '../../../context/LanguageContext';
 
 export default function LoginPage() {
   const { login } = useAuth();
+  const { t } = useLanguage();
   const router = useRouter();
   const searchParams = useSearchParams();
   const [email, setEmail] = useState('');
@@ -32,10 +34,10 @@ export default function LoginPage() {
   };
 
   return (
-    <AuthCard title="Sign In">
+    <AuthCard title={t.login.title}>
       <form onSubmit={handleSubmit} className="mt-8 space-y-4">
         <div>
-          <label className="mb-1.5 block text-sm text-white/60">Email</label>
+          <label className="mb-1.5 block text-sm text-white/60">{t.login.email}</label>
           <input
             type="email"
             required
@@ -45,7 +47,7 @@ export default function LoginPage() {
           />
         </div>
         <div>
-          <label className="mb-1.5 block text-sm text-white/60">Password</label>
+          <label className="mb-1.5 block text-sm text-white/60">{t.login.password}</label>
           <input
             type="password"
             required
@@ -62,14 +64,14 @@ export default function LoginPage() {
           disabled={submitting}
           className="w-full rounded-full bg-brand-gold py-3.5 text-sm font-semibold text-brand-dark hover:brightness-110 transition disabled:opacity-60"
         >
-          {submitting ? 'Signing in…' : 'Sign In'}
+          {submitting ? t.login.submitting : t.login.submit}
         </button>
       </form>
 
       <p className="mt-6 text-center text-sm text-white/50">
-        Don&apos;t have an account?{' '}
+        {t.login.noAccount}{' '}
         <Link href="/register" className="text-brand-gold hover:underline">
-          Register
+          {t.login.register}
         </Link>
       </p>
     </AuthCard>
