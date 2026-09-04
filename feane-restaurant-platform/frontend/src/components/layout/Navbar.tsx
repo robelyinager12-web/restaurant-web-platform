@@ -6,22 +6,25 @@ import Link from 'next/link';
 import { User as UserIcon, ShoppingCart, Search, Menu, X } from 'lucide-react';
 import { useCart } from '../../context/CartContext';
 import { useAuth } from '../../context/AuthContext';
+import { useLanguage } from '../../context/LanguageContext';
 import { SearchOverlay } from './SearchOverlay';
 import { Logo } from './Logo';
-
-const NAV_LINKS = [
-  { label: 'HOME', href: '/' },
-  { label: 'MENU', href: '/menu' },
-  { label: 'ABOUT', href: '/about' },
-  { label: 'BOOK TABLE', href: '/book-table' },
-  { label: 'CONTACT', href: '/contact' },
-];
+import { LanguageSwitcher } from './LanguageSwitcher';
 
 export function Navbar() {
   const { itemCount } = useCart();
   const { user, logout } = useAuth();
+  const { t } = useLanguage();
   const [mobileOpen, setMobileOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
+
+  const NAV_LINKS = [
+    { label: t.nav.home, href: '/' },
+    { label: t.nav.menu, href: '/menu' },
+    { label: t.nav.about, href: '/about' },
+    { label: t.nav.bookTable, href: '/book-table' },
+    { label: t.nav.contact, href: '/contact' },
+  ];
 
   const closeMobile = () => setMobileOpen(false);
 
@@ -48,10 +51,12 @@ export function Navbar() {
             ))}
           </nav>
 
-          <div className="hidden items-center gap-5 sm:flex">
+          <div className="hidden items-center gap-4 sm:flex">
+            <LanguageSwitcher />
+
             {user ? (
               <button onClick={logout} className="text-sm text-white/90 hover:text-brand-gold">
-                Sign out ({user.name.split(' ')[0]})
+                {t.nav.signOut} ({user.name.split(' ')[0]})
               </button>
             ) : (
               <Link href="/login" aria-label="Account" className="text-white/90 hover:text-brand-gold">
@@ -74,11 +79,12 @@ export function Navbar() {
               href="/menu"
               className="rounded-full bg-brand-gold px-6 py-2.5 text-sm font-semibold text-brand-dark hover:brightness-110 transition"
             >
-              Order Online
+              {t.nav.orderOnline}
             </Link>
           </div>
 
-          <div className="flex items-center gap-4 lg:hidden">
+          <div className="flex items-center gap-3 lg:hidden">
+            <LanguageSwitcher />
             <Link href="/cart" aria-label="Cart" className="relative text-white/90">
               <ShoppingCart size={20} />
               {itemCount > 0 && (
@@ -123,15 +129,15 @@ export function Navbar() {
                     }}
                     className="text-sm text-white/70"
                   >
-                    Sign out ({user.name.split(' ')[0]})
+                    {t.nav.signOut} ({user.name.split(' ')[0]})
                   </button>
                 ) : (
                   <Link href="/login" onClick={closeMobile} className="flex items-center gap-2 text-sm text-white/70">
-                    <UserIcon size={18} /> Sign In
+                    <UserIcon size={18} /> {t.nav.signIn}
                   </Link>
                 )}
                 <button onClick={openSearch} className="flex items-center gap-2 text-sm text-white/70">
-                  <Search size={18} /> Search
+                  <Search size={18} /> {t.nav.search}
                 </button>
               </div>
 
@@ -140,7 +146,7 @@ export function Navbar() {
                 onClick={closeMobile}
                 className="mt-4 rounded-full bg-brand-gold px-6 py-3 text-center text-sm font-semibold text-brand-dark"
               >
-                Order Online
+                {t.nav.orderOnline}
               </Link>
             </nav>
           </div>
